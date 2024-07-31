@@ -1,0 +1,50 @@
+package:
+  name: ruby3.2-snaky_hash
+  version: 1.0 
+  epoch: 2
+  description: 'A Hashie::Mash joint to make #snakelife better'
+  copyright:
+    - license: MIT
+  dependencies:
+    runtime:
+      - ruby3.2
+
+environment:
+  contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      - https://packages.wolfi.dev/os
+    packages:
+      - wolfi-baselayout
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+        #- git
+      - ruby-3.2
+      - ruby-3.2-dev
+        #- ruby3.2-bundler
+
+pipeline:
+    - uses: git-checkout
+    with:
+      expected-commit: b2fe507a070cb7364a44e8a64f832060c99fec19 
+      tag: ${{package.version}}
+      repository: https://github.com/lyvd/test_bundler_do_sqlite3
+
+  - uses: ruby/build
+    with:
+      gem: ${{vars.gem}}
+
+  - uses: ruby/install
+    with:
+      gem: ${{vars.gem}}
+      version: ${{package.version}}
+
+  - uses: ruby/clean
+
+vars:
+  gem: atlas-client 
+
+update:
+  enabled: false
